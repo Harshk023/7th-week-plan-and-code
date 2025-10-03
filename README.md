@@ -88,3 +88,82 @@ if __name__ == "__main__":
 # - Usually more space-efficient than memoization.
 # - Common trick: replace dp array with 2 variables.
 # ----------------------------------------------------
+
+
+"""
+Day 44: House Robber Problems (LC #198, #213)
+Author: [Your Name]
+Date: [Today's Date]
+
+Problems Covered:
+1. LC #198 – House Robber
+2. LC #213 – House Robber II
+"""
+
+# ----------------------------------------------------
+# 1. LC #198 – House Robber
+# ----------------------------------------------------
+"""
+Problem:
+You are a robber, cannot rob two adjacent houses.
+Maximize total money.
+
+Approach:
+- dp[i] = max money from 0..i
+- Recurrence: dp[i] = max(dp[i-1], dp[i-2] + nums[i])
+- Optimized with two variables.
+Time: O(n), Space: O(1)
+"""
+
+def rob(nums):
+    prev1, prev2 = 0, 0
+    for num in nums:
+        prev1, prev2 = max(prev1, prev2 + num), prev1
+    return prev1
+
+
+# ----------------------------------------------------
+# 2. LC #213 – House Robber II
+# ----------------------------------------------------
+"""
+Problem:
+Same as House Robber, but houses are in a circle (first & last are adjacent).
+We cannot rob both first and last.
+
+Approach:
+- Case 1: Rob houses [0..n-2]
+- Case 2: Rob houses [1..n-1]
+- Answer = max(case1, case2)
+"""
+
+def rob_linear(nums):
+    prev1, prev2 = 0, 0
+    for num in nums:
+        prev1, prev2 = max(prev1, prev2 + num), prev1
+    return prev1
+
+def rob_circle(nums):
+    if len(nums) == 1:
+        return nums[0]
+    return max(rob_linear(nums[:-1]), rob_linear(nums[1:]))
+
+
+# ----------------------------------------------------
+# Example Usage
+# ----------------------------------------------------
+if __name__ == "__main__":
+    # House Robber I
+    print("House Robber [2,7,9,3,1]:", rob([2,7,9,3,1]))  # Expected: 12
+    
+    # House Robber II
+    print("House Robber Circle [2,3,2]:", rob_circle([2,3,2]))  # Expected: 3
+    print("House Robber Circle [1,2,3,1]:", rob_circle([1,2,3,1]))  # Expected: 4
+
+
+# ----------------------------------------------------
+# Key Notes:
+# ----------------------------------------------------
+# - LC #198: Classic DP with non-adjacent constraint.
+# - LC #213: Add circular constraint → split into two cases.
+# - Both solved in O(n) time, O(1) space.
+# ----------------------------------------------------
