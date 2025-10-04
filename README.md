@@ -167,3 +167,85 @@ if __name__ == "__main__":
 # - LC #213: Add circular constraint → split into two cases.
 # - Both solved in O(n) time, O(1) space.
 # ----------------------------------------------------
+
+
+"""
+Day 45: Longest Increasing Subsequence (LC #300)
+Author: [Your Name]
+Date: [Today's Date]
+
+Problem Statement:
+Given an integer array nums, return the length of the longest strictly increasing subsequence.
+
+Example:
+Input: nums = [10,9,2,5,3,7,101,18]
+Output: 4
+Explanation: The LIS is [2,3,7,101], so the length is 4.
+"""
+
+# ----------------------------------------------------
+# Approach 1: Dynamic Programming (O(n^2))
+# ----------------------------------------------------
+"""
+dp[i] = length of LIS ending at index i
+For each element nums[i], check all previous elements nums[j] (j < i):
+    If nums[i] > nums[j], update dp[i] = max(dp[i], dp[j] + 1)
+
+Answer = max(dp)
+Time Complexity: O(n^2)
+Space Complexity: O(n)
+"""
+
+def lengthOfLIS(nums):
+    n = len(nums)
+    dp = [1] * n  # Each element is an LIS of length 1 by itself
+    
+    for i in range(n):
+        for j in range(i):
+            if nums[i] > nums[j]:
+                dp[i] = max(dp[i], dp[j] + 1)
+    
+    return max(dp)
+
+
+# ----------------------------------------------------
+# Approach 2: Binary Search Optimization (O(n log n))
+# ----------------------------------------------------
+"""
+We maintain a list 'lis' where lis[k] = smallest possible tail of an increasing subsequence of length (k+1).
+For each number:
+    - If num > last element in lis → append it
+    - Else → replace the first element in lis >= num (using binary search)
+"""
+
+import bisect
+
+def lengthOfLIS_optimized(nums):
+    lis = []
+    for num in nums:
+        pos = bisect.bisect_left(lis, num)
+        if pos == len(lis):
+            lis.append(num)
+        else:
+            lis[pos] = num
+    return len(lis)
+
+
+# ----------------------------------------------------
+# Example Usage
+# ----------------------------------------------------
+if __name__ == "__main__":
+    nums = [10, 9, 2, 5, 3, 7, 101, 18]
+    
+    print("LIS using DP (O(n^2)):", lengthOfLIS(nums))            # Expected: 4
+    print("LIS using Binary Search (O(n log n)):", lengthOfLIS_optimized(nums))  # Expected: 4
+
+
+# ----------------------------------------------------
+# Key Notes:
+# ----------------------------------------------------
+# - LIS is one of the most classic DP problems.
+# - DP version: Simple to understand but O(n^2).
+# - Binary search version: Efficient (O(n log n)).
+# - Core idea: Build subsequence intelligently using bisect.
+# ----------------------------------------------------
